@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>BeanCraft — 신선한 커피 구독 서비스</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --brown-900:#2a201a;
+      --brown-800:#3b2a22;
+      --brown-700:#4a362d;
+      --beige-50:#faf6f0;
+      --beige-100:#f5efe6;
+      --beige-200:#efe6d9;
+      --mint-400:#66d1c1;
+      --mint-500:#39c6b2;
+      --text:#1e1e1e;
+      --muted:#6b6b6b;
+      --ring:#39c6b2;
+      --shadow: 0 10px 30px rgba(0,0,0,.08), 0 2px 10px rgba(0,0,0,.04);
+      --radius-xl: 18px;
+      --radius-2xl: 26px;
+      --container: clamp(16rem, 90vw, 1120px);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --text:#f7f7f5;
+        --muted:#c9c7c3;
+        --beige-50:#191613;
+        --beige-100:#1f1a16;
+        --beige-200:#29231e;
+        --brown-900:#12100e;
+        --brown-800:#191511;
+        --brown-700:#1f1a16;
+        --shadow: 0 10px 30px rgba(0,0,0,.45), 0 2px 10px rgba(0,0,0,.3);
+      }
+    }
+    /* Reset-ish */
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0; font-family: Inter, "Noto Sans KR", system-ui, -apple-system, Segoe UI, Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color:var(--text); background:linear-gradient(180deg,var(--beige-50),var(--beige-100));}
+    img{max-width:100%; display:block}
+    a{color:inherit; text-decoration:none}
+    .container{width:var(--container); margin-inline:auto; padding-inline:20px}
+    .pill{display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .75rem; border-radius:999px; background: color-mix(in oklab, var(--mint-400) 18%, transparent); color:var(--brown-800); font-weight:600; font-size:.85rem}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:.6rem; padding:14px 20px; border-radius:12px; border:2px solid transparent; font-weight:800; letter-spacing:.2px; cursor:pointer; transition:.2s ease; text-align:center}
+    .btn-primary{background:var(--mint-500); color:#0b1412; box-shadow: var(--shadow)}
+    .btn-primary:hover{transform:translateY(-1px); filter:saturate(1.1)}
+    .btn-outline{background:transparent; color:var(--mint-500); border-color: color-mix(in oklab, var(--mint-500) 60%, transparent)}
+    .btn-outline:hover{background: color-mix(in oklab, var(--mint-500) 12%, transparent)}
+    .section{padding:72px 0}
+    .card{background:linear-gradient(180deg,var(--beige-100),var(--beige-50)); border:1px solid color-mix(in oklab, var(--brown-800) 8%, transparent); border-radius:var(--radius-xl); box-shadow:var(--shadow)}
+    .grid{display:grid; gap:24px}
+    .stars{display:inline-flex; gap:2px; vertical-align:middle}
+    .sr-only{position:absolute!important; width:1px;height:1px; padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Header */
+    header{position:sticky; top:0; z-index:50; backdrop-filter: saturate(180%) blur(10px); background: color-mix(in oklab, var(--beige-100) 60%, transparent); border-bottom:1px solid color-mix(in oklab, var(--brown-800) 10%, transparent)}
+    .nav{display:flex; align-items:center; justify-content:space-between; height:66px}
+    .brand{display:flex; align-items:center; gap:.75rem}
+    .logo{width:36px;height:36px; border-radius:10px; background: radial-gradient(60% 60% at 40% 30%, var(--mint-400), transparent 60%), linear-gradient(135deg, var(--brown-800), var(--brown-700)); box-shadow:inset 0 0 0 2px color-mix(in oklab, #fff 10%, transparent)}
+    .brand h1{font-size:1.1rem; margin:0; letter-spacing:.4px}
+    nav a{padding:8px 10px; border-radius:8px}
+    nav a:hover{background: color-mix(in oklab, var(--mint-500) 12%, transparent)}
+    /* Hero */
+    .hero{display:grid; grid-template-columns: 1.1fr .9fr; gap:36px; align-items:center; padding:72px 0}
+    .kicker{margin-bottom:14px}
+    .headline{font-size: clamp(2rem, 4vw, 3rem); line-height:1.1; letter-spacing:-.4px; margin:0 0 14px}
+    .sub{font-size:1.05rem; color:var(--muted); margin:0 0 22px}
+    .benefits{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 22px}
+    .hero-visual{position:relative}
+    .hero-img{aspect-ratio: 4/3; border-radius: var(--radius-2xl); object-fit: cover; box-shadow:var(--shadow); border:1px solid color-mix(in oklab, var(--brown-800) 10%, transparent)}
+    .note{position:absolute; bottom:10px; left:10px; font-size:.8rem; padding:.35rem .6rem; border-radius:10px; background: color-mix(in oklab, var(--beige-50) 70%, transparent); border:1px solid color-mix(in oklab, var(--brown-800) 10%, transparent)}
+    /* Features */
+    .features .card{padding:22px}
+    .icon{width:36px;height:36px; border-radius:10px; background: color-mix(in oklab, var(--mint-500) 16%, transparent); display:grid; place-items:center; margin-bottom:10px}
+    .icon svg{width:20px;height:20px}
+    /* Product (Plans) */
+    .plans{display:grid; grid-template-columns: repeat(3,1fr); gap:24px}
+    .plan{padding:24px}
+    .badge{display:inline-block; font-weight:700; font-size:.8rem; padding:.3rem .6rem; border-radius:999px; background: color-mix(in oklab, var(--mint-500) 18%, transparent)}
+    .price{font-size:1.8rem; font-weight:800; margin:.2rem 0 12px}
+    .list{list-style:none; padding:0; margin:0; display:grid; gap:10px}
+    .list li{display:flex; align-items:flex-start; gap:.6rem}
+    .list svg{flex:0 0 18px}
+    /* Testimonials */
+    .testimonials .card{padding:22px}
+    .avatar{width:42px;height:42px;border-radius:999px; object-fit:cover; border:1px solid color-mix(in oklab, var(--brown-800) 10%, transparent)}
+    /* CTA Banner */
+    .cta-banner{padding:32px; display:grid; grid-template-columns: 1.2fr .8fr; gap:18px; align-items:center}
+    form{display:flex; gap:10px}
+    input[type="email"]{flex:1; padding:14px 14px; border-radius:12px; border:1.6px solid color-mix(in oklab, var(--brown-800) 15%, transparent); background:var(--beige-50); color:var(--text); outline-color:var(--ring)}
+    input[type="email"]:focus{box-shadow:0 0 0 4px color-mix(in oklab, var(--mint-500) 24%, transparent)}
+    /* FAQ */
+    details{background:linear-gradient(180deg,var(--beige-100),var(--beige-50)); border:1px solid color-mix(in oklab, var(--brown-800) 10%, transparent); border-radius:14px; padding:16px 18px}
+    summary{cursor:pointer; font-weight:700; outline:none}
+    details[open]{box-shadow:var(--shadow)}
+    details + details{margin-top:14px}
+    /* Footer */
+    footer{padding:40px 0 60px; color:var(--muted)}
+    footer a{color:inherit}
+    footer a:hover{color:var(--mint-500)}
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero{grid-template-columns:1fr}
+      .cta-banner{grid-template-columns:1fr}
+      .plans{grid-template-columns: 1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .nav .links{display:none}
+      .section{padding:56px 0}
+      .plans{grid-template-columns: 1fr}
+      form{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container nav" role="navigation" aria-label="주요 메뉴">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <h1 aria-label="BeanCraft 로고">BeanCraft</h1>
+      </div>
+      <nav class="links" aria-label="섹션 이동">
+        <a href="#features">특징</a>
+        <a href="#plans">플랜</a>
+        <a href="#testimonials">후기</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-outline" href="#cta" aria-label="첫 구독 신청으로 이동">첫 구독 신청</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="container hero" id="home">
+    <div>
+      <span class="pill kicker" aria-label="혜택 배지">첫 구독 40% 할인 ✨</span>
+      <h2 class="headline">로스팅 72시간 이내,<br>집 앞까지 도착하는 맞춤 커피 구독</h2>
+      <p class="sub">오늘 취향을 선택하면 내일 아침, 신선한 향으로 하루를 시작하세요. BeanCraft는 로스터리 직배송으로 <strong>무료 익일 배송</strong>을 제공합니다.</p>
+      <div class="benefits" role="list" aria-label="주요 혜택">
+        <span class="pill" role="listitem">72시간 내 로스팅</span>
+        <span class="pill" role="listitem">첫 구독 40% 할인</span>
+        <span class="pill" role="listitem">무료 익일 배송</span>
+      </div>
+      <div style="display:flex; gap:12px; flex-wrap:wrap">
+        <a class="btn btn-primary" href="#cta" aria-label="지금 40% 할인으로 첫 구독 시작하기">지금 40% 할인으로 첫 구독 시작하기</a>
+        <a class="btn btn-outline" href="#plans" aria-label="원두 구독 플랜 보기">원두 플랜 보기</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <img
+        class="hero-img"
+        src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1600&auto=format&fit=crop"
+        alt="나무 테이블 위 신선한 커피 원두와 드리퍼"
+        title="hero-beans.jpg"
+        data-filename="hero-beans.jpg"
+      />
+      <span class="note" aria-label="촬영 안내">샘플 이미지 • Unsplash</span>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features" aria-labelledby="features-title">
+    <div class="container">
+      <h3 id="features-title" style="margin:0 0 18px; font-size:1.8rem">왜 BeanCraft인가요?</h3>
+      <p style="margin:0 0 22px; color:var(--muted)">신선함과 편리함, 그리고 합리적인 가격. 세 가지를 모두 만족시키는 커피 구독을 경험하세요.</p>
+      <div class="grid" style="grid-template-columns: repeat(3,1fr);">
+        <!-- Card 1 -->
+        <article class="card features">
+          <div class="icon" aria-label="신선 원두 아이콘">
+            <svg viewBox="0 0 24 24" fill="none" role="img" aria-label="커피 빈 아이콘">
+              <path d="M12 3c-6 0-9 5-9 9s3 9 9 9 9-5 9-9-3-9-9-9Z" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M6 12c3.5-1.2 5.5-4.2 6-9" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </div>
+          <h4 style="margin:.2rem 0 6px;">72시간 내 로스팅</h4>
+          <p style="margin:0; color:var(--muted)">주문 후 72시간 내 로스팅된 신선 원두만 배송합니다.</p>
+        </article>
+        <!-- Card 2 -->
+        <article class="card features">
+          <div class="icon" aria-label="혜택 아이콘">
+            <svg viewBox="0 0 24 24" fill="none" role="img" aria-label="리본 배지 아이콘">
+              <circle cx="12" cy="8" r="5.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M8 13l-3 7 5-3 2 3 2-3 5 3-3-7" stroke="currentColor" stroke-width="1.6" />
+            </svg>
+          </div>
+          <h4 style="margin:.2rem 0 6px;">첫 구독 40% 할인</h4>
+          <p style="margin:0; color:var(--muted)">첫 달 파격 할인으로 부담 없이 시작하세요.</p>
+        </article>
+        <!-- Card 3 -->
+        <article class="card features">
+          <div class="icon" aria-label="배송 아이콘">
+            <svg viewBox="0 0 24 24" fill="none" role="img" aria-label="트럭 아이콘">
+              <path d="M2 7h12v8H2zM14 9h4l3 3v3h-7z" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="6" cy="17" r="2" stroke="currentColor" stroke-width="1.6"/>
+              <circle cx="17" cy="17" r="2" stroke="currentColor" stroke-width="1.6"/>
+            </svg>
+          </div>
+          <h4 style="margin:.2rem 0 6px;">무료 익일 배송</h4>
+          <p style="margin:0; color:var(--muted)">로스터리에서 바로 출발, 다음 날 문 앞에서 받아보세요.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product / Plans -->
+  <section class="section" id="plans" aria-labelledby="plans-title">
+    <div class="container">
+      <h3 id="plans-title" style="margin:0 0 18px; font-size:1.8rem">구독 플랜</h3>
+      <p style="margin:0 0 22px; color:var(--muted)">취향과 소비량에 맞춰 선택하세요. 모든 플랜에 <strong>첫 달 40% 할인</strong>과 <strong>무료 익일 배송</strong>이 적용됩니다.</p>
+      <div class="plans">
+        <!-- Plan 1 -->
+        <article class="card plan" aria-label="라이트 플랜">
+          <img src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?q=80&w=800&auto=format&fit=crop"
+               alt="봉투형 패키지에 담긴 스페셜티 원두 250g"
+               title="plan-light.jpg" data-filename="plan-light.jpg"
+               style="border-radius:12px; margin-bottom:14px; aspect-ratio: 4/3; object-fit:cover;">
+          <span class="badge" aria-label="가벼운 이용자 추천">라이트</span>
+          <div class="price" aria-label="가격 예시">₩19,900/월<span class="sr-only"> (예시 가격)</span></div>
+          <ul class="list" aria-label="플랜 포함 혜택">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>
+              250g / 주 1회 배송
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>
+              싱글오리진 랜덤 로테이션
+            </li>
+          </ul>
+          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn btn-primary" href="#cta" aria-label="라이트 플랜으로 첫 구독 신청">라이트로 첫 구독 신청</a>
+            <a class="btn btn-outline" href="#faq" aria-label="자주 묻는 질문 보기">자주 묻는 질문</a>
+          </div>
+        </article>
+        <!-- Plan 2 -->
+        <article class="card plan" aria-label="스탠다드 플랜">
+          <img src="https://images.unsplash.com/photo-1525385133512-2f3bdd039054?q=80&w=800&auto=format&fit=crop"
+               alt="원목 트레이 위 두 팩의 원두와 드립세트"
+               title="plan-standard.jpg" data-filename="plan-standard.jpg"
+               style="border-radius:12px; margin-bottom:14px; aspect-ratio: 4/3; object-fit:cover;">
+          <span class="badge">스탠다드</span>
+          <div class="price">₩29,900/월</div>
+          <ul class="list">
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>250g x 2 / 주 1회</li>
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>에스프레소/핸드드립 취향 선택</li>
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>로스터 추천 스페셜티</li>
+          </ul>
+          <div style="margin-top:14px">
+            <a class="btn btn-primary" href="#cta" aria-label="스탠다드 플랜으로 첫 구독 신청">스탠다드로 첫 구독 신청</a>
+          </div>
+        </article>
+        <!-- Plan 3 -->
+        <article class="card plan" aria-label="프로 플랜">
+          <img src="https://images.unsplash.com/photo-1459755486867-b55449bb39ff?q=80&w=800&auto=format&fit=crop"
+               alt="카페 바에서 로스팅된 커피백 여러 개"
+               title="plan-pro.jpg" data-filename="plan-pro.jpg"
+               style="border-radius:12px; margin-bottom:14px; aspect-ratio: 4/3; object-fit:cover;">
+          <span class="badge">프로</span>
+          <div class="price">₩49,900/월</div>
+          <ul class="list">
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>500g x 2 / 주 1회</li>
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>마이크로-로트 한정판 포함</li>
+            <li><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12l5 5 11-11" stroke="currentColor" stroke-width="2"/></svg>바리스타 레시피 카드</li>
+          </ul>
+          <div style="margin-top:14px">
+            <a class="btn btn-primary" href="#cta" aria-label="프로 플랜으로 첫 구독 신청">프로로 첫 구독 신청</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section" id="testimonials" aria-labelledby="testimonials-title">
+    <div class="container">
+      <h3 id="testimonials-title" style="margin:0 0 18px; font-size:1.8rem">고객 후기</h3>
+      <div class="grid" style="grid-template-columns: repeat(3,1fr);">
+        <!-- Review 1 -->
+        <figure class="card testimonials" aria-label="고객 후기 1">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+            <img class="avatar"
+                 src="https://images.unsplash.com/photo-1554151228-14d9def656e4?q=80&w=256&auto=format&fit=crop"
+                 alt="고객 프로필 사진: 미소 짓는 여성" title="avatar-1.jpg" data-filename="avatar-1.jpg">
+            <figcaption>
+              <strong>소연 님</strong><br>
+              <span style="color:var(--muted); font-size:.9rem">핸드드립 홈바리스타</span>
+            </figcaption>
+          </div>
+          <div class="stars" aria-label="평점 5점 만점 중 4.9점">
+            <span aria-hidden="true">★★★★★</span>
+          </div>
+          <p style="margin:10px 0 0; color:var(--muted)">원두가 정말 신선해요. 향이 다릅니다. 배송도 익일이라 매번 기대돼요.</p>
+        </figure>
+        <!-- Review 2 -->
+        <figure class="card testimonials" aria-label="고객 후기 2">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+            <img class="avatar"
+                 src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&auto=format&fit=crop"
+                 alt="고객 프로필 사진: 안경을 쓴 남성" title="avatar-2.jpg" data-filename="avatar-2.jpg">
+            <figcaption>
+              <strong>민준 님</strong><br>
+              <span style="color:var(--muted); font-size:.9rem">라떼 애호가</span>
+            </figcaption>
+          </div>
+          <div class="stars" aria-label="평점 5점 만점 중 4.8점"><span aria-hidden="true">★★★★★</span></div>
+          <p style="margin:10px 0 0; color:var(--muted)">첫 달 40% 할인으로 가볍게 시작했는데, 이제는 없으면 안 되는 루틴!</p>
+        </figure>
+        <!-- Review 3 -->
+        <figure class="card testimonials" aria-label="고객 후기 3">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+            <img class="avatar"
+                 src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=256&auto=format&fit=crop"
+                 alt="고객 프로필 사진: 단발머리 여성" title="avatar-3.jpg" data-filename="avatar-3.jpg">
+            <figcaption>
+              <strong>지우 님</strong><br>
+              <span style="color:var(--muted); font-size:.9rem">회사원</span>
+            </figcaption>
+          </div>
+          <div class="stars" aria-label="평점 5점 만점 중 5점"><span aria-hidden="true">★★★★★</span></div>
+          <p style="margin:10px 0 0; color:var(--muted)">취향 선택이 쉬워서 부모님 것도 구독 중이에요. 배송은 항상 다음 날 도착!</p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner (Email Form) -->
+  <section class="section" id="cta" aria-labelledby="cta-title">
+    <div class="container card cta-banner">
+      <div>
+        <h3 id="cta-title" style="margin:0 0 10px; font-size:1.6rem">지금 첫 구독 40% 할인 코드 받기</h3>
+        <p style="margin:0; color:var(--muted)">이메일을 남기면 전용 할인 코드와 취향 설문 링크를 보내드려요. 무료 익일 배송으로 바로 받아보세요.</p>
+      </div>
+      <form action="#" method="post" aria-label="구독 신청 폼" novalidate>
+        <label for="email" class="sr-only">이메일 주소</label>
+        <input id="email" name="email" type="email" placeholder="이메일 주소를 입력하세요"
+               inputmode="email" autocomplete="email" aria-required="true"
+               required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" aria-invalid="false">
+        <button class="btn btn-primary" type="submit" aria-label="지금 무료로 체험 시작">지금 무료로 체험 시작</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="container" style="max-width:860px">
+      <h3 id="faq-title" style="margin:0 0 18px; font-size:1.8rem">자주 묻는 질문</h3>
+
+      <details>
+        <summary>로스팅 72시간 이내는 어떻게 보장하나요?</summary>
+        <div style="margin-top:10px; color:var(--muted)">주문 즉시 배치에 등록되어 최신 로스팅 일정에 맞춰 준비됩니다. 포장 라벨에 로스팅 날짜가 표기됩니다.</div>
+      </details>
+
+      <details>
+        <summary>첫 구독 40% 할인은 어떻게 적용되나요?</summary>
+        <div style="margin-top:10px; color:var(--muted)">이메일로 받은 할인 코드를 결제 페이지에 입력하면 첫 달 구독료에 자동 적용됩니다.</div>
+      </details>
+
+      <details>
+        <summary>배송 지역과 익일 배송 기준이 궁금해요.</summary>
+        <div style="margin-top:10px; color:var(--muted)">전국 대부분 지역에 익일 배송이 가능하며, 일부 도서산간은 1~2일 추가 소요될 수 있습니다.</div>
+      </details>
+
+      <details>
+        <summary>원두 분쇄도/취향은 어떻게 선택하나요?</summary>
+        <div style="margin-top:10px; color:var(--muted)">구독 신청 후 취향 설문에서 드립/에스프레소/프렌치프레스 등 용도와 분쇄도를 선택할 수 있습니다.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container" style="display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; border-top:1px solid color-mix(in oklab, var(--brown-800) 12%, transparent); padding-top:20px">
+      <div style="display:flex; align-items:center; gap:10px">
+        <div class="logo" aria-hidden="true"></div>
+        <span>© <span aria-label="연도">2025</span> BeanCraft. All rights reserved.</span>
+      </div>
+      <div style="display:flex; gap:12px">
+        <a href="#" aria-label="이용약관">이용약관</a>
+        <a href="#" aria-label="개인정보 처리방침">개인정보 처리방침</a>
+        <a href="#" aria-label="고객센터">고객센터</a>
+      </div>
+    </div>
+  </footer>
+
+  <noscript>
+    <style>
+      .btn-primary:hover{transform:none}
+    </style>
+  </noscript>
+</body>
+</html>
